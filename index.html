@@ -5,7 +5,7 @@
 
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="mqttws31.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 <script type="text/javascript">
 /*
 by @bordignon on twitter
@@ -17,9 +17,9 @@ public broker and topic you can use for testing.
 	var MQTTsubTopic = 'dcsquare/cubes/#'; //works with wildcard # and + topics dynamically now
 */
 //settings BEGIN
-	var MQTTbroker = 'iot.eclipse.org';
+	var MQTTbroker = 'test.mosquitto.org';
 	var MQTTport = 8080;
-	var MQTTsubTopic = 'leandroHonorato'; //works with wildcard # and + topics dynamically now
+	var MQTTsubTopic = '/leandroHonorato'; //works with wildcard # and + topics dynamically now
 //settings END
 	var chart; // global variuable for chart
 	var dataTopics = new Array();
@@ -29,7 +29,6 @@ public broker and topic you can use for testing.
 	client.onMessageArrived = onMessageArrived;
 	client.onConnectionLost = onConnectionLost;
 	//connect to broker is at the bottom of the init() function !!!!
-
 //mqtt connecton options including the mqtt broker subscriptions
 	var options = {
 		timeout: 3,
@@ -53,10 +52,8 @@ public broker and topic you can use for testing.
 		console.log(message.destinationName, '',message.payloadString);
 		//check if it is a new topic, if not add it to the array
 		if (dataTopics.indexOf(message.destinationName) < 0){
-
 		    dataTopics.push(message.destinationName); //add new topic to array
 		    var y = dataTopics.indexOf(message.destinationName); //get the index no
-
 		    //create new data series for the chart
 			var newseries = {
 		            id: y,
@@ -64,9 +61,7 @@ public broker and topic you can use for testing.
 		            data: []
 		            };
 			chart.addSeries(newseries); //add the series
-
 		    };
-
 		var y = dataTopics.indexOf(message.destinationName); //get the index no of the topic from the array
 		var myEpoch = new Date().getTime(); //get current epoch time
 		var thenum = message.payloadString.replace( /^\D+/g, ''); //remove any text spaces from the message
@@ -94,7 +89,6 @@ public broker and topic you can use for testing.
 //this adds the plots to the chart
     function plot(point, chartno) {
     	console.log(point);
-
 	        var series = chart.series[0],
 	            shift = series.data.length > 20; // shift if the series is
 	                                             // longer than 20
@@ -135,8 +129,8 @@ public broker and topic you can use for testing.
 <script src="http://code.highcharts.com/stock/highstock.js"></script>
 <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 
-</head>
 <body>
+</head>
 <body onload="init();"><!--Start the javascript ball rolling and connect to the mqtt broker-->
 
 <h1> IoT Weekend Recife 2016 </h1>
